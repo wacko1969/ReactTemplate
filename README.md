@@ -52,7 +52,7 @@ To get a list of browsers supported by this app, run `npx browserslist`
       "backgroundColor": "#00FFEE",
       "fontColor": "#9900FF"
     },
-    "\\layout\\": {
+    "\\layouts\\": {
       "backgroundColor": "yellow",
       "fontColor": "magenta"
     },
@@ -283,6 +283,8 @@ src/
 ### Maintenance Script
 
 `updates`: Checks for package updates using npm-check-updates (ncu) and installs them.
+
+`browserslist`: Builds a (mostly) formatted table of supported browsers that can be dropped into this file.
 
 ### launch.json
 
