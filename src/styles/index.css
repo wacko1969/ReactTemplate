@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: Oswald;
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("../assets/fonts/Oswald-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Manrope;
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("../assets/fonts/Manrope-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 100;
+  src: url("../assets/fonts/Barlow-Thin.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 100;
+  src: url("../assets/fonts/Barlow-ThinItalic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 200;
+  src: url("../assets/fonts/Barlow-ExtraLight.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 200;
+  src: url("../assets/fonts/Barlow-ExtraLightItalic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 300;
+  src: url("../assets/fonts/Barlow-Light.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 300;
+  src: url("../assets/fonts/Barlow-LightItalic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 400;
+  src: url("../assets/fonts/Barlow-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 400;
+  src: url("../assets/fonts/Barlow-Italic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 500;
+  src: url("../assets/fonts/Barlow-Medium.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 500;
+  src: url("../assets/fonts/Barlow-MediumItalic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 600;
+  src: url("../assets/fonts/Barlow-SemiBold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 600;
+  src: url("../assets/fonts/Barlow-SemiBoldItalic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 700;
+  src: url("../assets/fonts/Barlow-Bold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 700;
+  src: url("../assets/fonts/Barlow-BoldItalic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 800;
+  src: url("../assets/fonts/Barlow-ExtraBold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 800;
+  src: url("../assets/fonts/Barlow-ExtraBoldItalic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: normal;
+  font-weight: 900;
+  src: url("../assets/fonts/Barlow-Black.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Barlow;
+  font-style: italic;
+  font-weight: 900;
+  src: url("../assets/fonts/Barlow-BlackItalic.ttf") format("truetype");
+  font-display: swap;
+}
+
+@theme {
+  --color-hd-primary: #e86f2d;
+  --color-hd-primary-hover: #c75f26;
+  --color-hd-primary-pressed: #b24a12;
+  --color-hd-primary-disabled: #a6a19f;
+  --color-hd-secondary: #333333;
+  --color-hd-secondary-hover: #c75f26;
+  --color-hd-dark-1: #1f1f1f;
+  --color-hd-dark-5: #8e8e8e;
+  --color-hd-bg-1: #242424;
+  --color-hd-bg-light: #292929;
+  --color-hd-bg-extra-light: #595959;
+  --color-hd-gray-1: #434242;
+  --color-hd-gray-2: #5b5b5b;
+  --color-hd-gray-3: #8e8e8e;
+  --color-hd-gray-4: #ebebeb;
+  --color-hd-gray-5: #303030;
+  --font-barlow: "Barlow", sans-serif;
+  --font-oswald: "Oswald", sans-serif;
+  --font-oswald--font-feature-settings: "liga", "kern";
+  --font-manrope: "Manrope", sans-serif;
+  --font-manrope--font-feature-settings:
+    "cv02", "cv03", "cv04", "cv05", "cv11", "liga", "salt";
+  --font-manrope--font-variation-settings: "opsz" 32;
+  --font-sans: "Barlow", sans-serif;
+  --text-12px: 12px;
+  --text-14px: 14px;
+  --text-16px: 16px;
+  --text-18px: 18px;
+  --spacing-13: 52px;
+  --breakpoint-ws: 1920px;
+}
+
+@layer base {
+  body {
+    @apply bg-black;
+    @apply max-w-[var(--breakpoint-ws)] mx-auto w-full;
+    @apply text-white;
+    @apply px-6 md:px-10;
+  }
+}

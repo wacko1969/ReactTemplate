@@ -1,0 +1,9 @@
+dist/*
+.*rc
+*.config.js
+*.config.mjs
+package*.json
+tsconfig.json
+node_modules
+src/**/*.stories.tsx
+.storybook/
