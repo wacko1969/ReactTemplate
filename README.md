@@ -18,18 +18,18 @@ To get a list of browsers supported by this app, run `npx browserslist`
 
 | Browsers             | Version                                                       |
 | -------------------- | ------------------------------------------------------------- |
-| Chrome (Android)     | 133                                                           |
-| Firefox (Android)    | 135                                                           |
-| QQ Browser (Android) | 14.9                                                          |
-| UC Browser (Android) | 15.5                                                          |
 | Android WebView      | 133                                                           |
 | Chrome               | 133, 132, 131, 126, 125, 109                                  |
+| Chrome (Android)     | 133                                                           |
 | Edge                 | 133, 132                                                      |
 | Firefox              | 135, 134, 115                                                 |
-| Safari (iOS)         | 18.3, 18.2, 18.1, 18.0, 17.6–17.7, 17.5, 16.6–16.7, 15.6–15.8 |
+| Firefox (Android)    | 135                                                           |
 | Opera Mobile         | 80                                                            |
+| QQ Browser (Android) | 14.9                                                          |
+| Safari (iOS)         | 18.3, 18.2, 18.1, 18.0, 17.6-17.7, 17.5, 16.6-16.7, 15.6-15.8 |
 | Safari (macOS)       | 18.3, 18.1, 17.6, 16.6                                        |
 | Samsung Internet     | 27                                                            |
+| UC Browser (Android) | 15.5                                                          |
 
 ## VSCode
 
