@@ -52,23 +52,23 @@ To get a list of browsers supported by this app, run `npx browserslist`
       "backgroundColor": "#00FFEE",
       "fontColor": "#9900FF"
     },
-    "\\application-container\\": {
+    "\\layout\\": {
       "backgroundColor": "yellow",
       "fontColor": "magenta"
     },
-    "\\common-components\\": {
+    "\\pages\\": {
       "backgroundColor": "orange",
       "fontColor": "black"
     },
-    "\\identity-server-ui\\": {
+    "\\routes\\": {
       "backgroundColor": "magenta",
       "fontColor": "black"
     },
-    "\\modules\\": {
+    "\\hooks\\": {
       "backgroundColor": "green",
       "fontColor": "yellow"
     },
-    "\\offline-ui\\": {
+    "\\components\\": {
       "backgroundColor": "#A52A2A",
       "fontColor": "#00FF00"
     }
