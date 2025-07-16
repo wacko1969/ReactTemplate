@@ -1,0 +1,62 @@
+{
+  "folders": [
+    {
+      "path": "web-application"
+    }
+  ],
+  "settings": {
+    "find-it-faster.general.useTerminalInEditor": true,
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[javascriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "typescript.referencesCodeLens.enabled": true,
+    "typescript.implementationsCodeLens.enabled": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "workbench.colorCustomizations": {
+      "minimap.errorHighlight": "#FF0000",
+      "minimap.warningHighlight": "#FFFF00"
+    },
+    "liveshare.guestApprovalRequired": true,
+    "editor.stickyScroll.enabled": false,
+    "editor.codeLens": true,
+    "editor.linkedEditing": true,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "extensions": {
+    "recommendations": [
+      "huibizhang.codesnap-plus",
+      "dbaeumer.vscode-eslint",
+      "figma.figma-vscode-extension",
+      "tomrijndorp.find-it-faster",
+      "publisher.extension-name",
+      "eamodio.gitlens",
+      "wix.vscode-import-cost",
+      "ms-vscode.vscode-typescript-next",
+      "ms-vsliveshare.vsliveshare",
+      "shd101wyy.markdown-preview-enhanced",
+      "stringham.move-ts",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss",
+      "vscode-icons-team.vscode-icons",
+      "tomoki1207.pdf",
+      "sdras.night-owl",
+      "mondersky.tabscolor",
+      "tomrijndorp.find-it-faster"
+    ]
+  }
+}
