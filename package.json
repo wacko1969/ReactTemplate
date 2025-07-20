@@ -9,6 +9,7 @@
     "build": "npm version minor && webpack --mode production",
     "build:dev": "prettier --write src/**/*.{ts,tsx,css,html} && webpack --mode development",
     "prettier": "prettier --write src/**/*.{ts,tsx,css,html}",
+    "browsersList": "node ./buildBrowsersListFormatted.js",
     "updates": "ncu -u && npm i",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
