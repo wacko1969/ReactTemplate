@@ -29,6 +29,10 @@
       "minimap.errorHighlight": "#FF0000",
       "minimap.warningHighlight": "#FFFF00"
     },
+    "workbench.sideBar.location": "right",
+    "workbench.colorTheme": "Night Owl",
+    "workbench.iconTheme": "vscode-icons",
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
     "liveshare.guestApprovalRequired": true,
     "editor.stickyScroll.enabled": false,
     "editor.codeLens": true,
