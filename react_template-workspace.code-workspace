@@ -39,7 +39,9 @@
     "editor.linkedEditing": true,
     "editor.formatOnSave": true,
     "editor.tabSize": 2,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "extensions.ignoreRecommendations": true,
+    "git.enableSmartCommit": true
   },
   "extensions": {
     "recommendations": [
