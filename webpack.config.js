@@ -11,6 +11,9 @@ module.exports = (env, argv) => {
   const config = {
     entry: "./src/index.tsx",
     devtool: isProduction ? false : "eval-source-map",
+    stats: {
+      errorDetails: true
+    },
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "[name].[contenthash].js",
