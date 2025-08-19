@@ -177,6 +177,8 @@
   --color-hd-gray-3: #8e8e8e;
   --color-hd-gray-4: #ebebeb;
   --color-hd-gray-5: #303030;
+  --color-spinner-bg: #f3f3f3;
+  --color-spinner-border: #3498db;
   --font-barlow: "Barlow", sans-serif;
   --font-oswald: "Oswald", sans-serif;
   --font-oswald--font-feature-settings: "liga", "kern";
@@ -198,6 +200,7 @@
     @apply bg-black;
     @apply max-w-[var(--breakpoint-ws)] mx-auto w-full;
     @apply text-white;
-    @apply px-6 md:px-10;
+    @apply m-0 p-0 h-full
+    /* @apply px-6 md:px-10; */;
   }
 }

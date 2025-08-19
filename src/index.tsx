@@ -8,7 +8,7 @@ const root = createRoot(document.getElementById("root")!);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <App className="fixed top-0 left-0 w-full h-full -z-10 bg-cover bg-center bg-no-repeat transition-[background-image] duration-1000 ease-in-out overflow-x-hidden" />
     </BrowserRouter>
   </React.StrictMode>
 );
