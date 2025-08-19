@@ -95,7 +95,7 @@ To get a list of browsers supported by this app, run `npx browserslist`
 ```
 winget install fzf
 winget install Warp.Warp
-winget install bat
+winget install sharkdp.bat
 ```
 
 - and you might want to add this to your `settings.json` file:
