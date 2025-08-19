@@ -30,6 +30,7 @@ module.exports = (env, argv) => {
         "@pages": path.resolve(__dirname, "src/pages"),
         "@stores": path.resolve(__dirname, "src/store"),
         "@hooks": path.resolve(__dirname, "src/hooks"),
+        "@utils": path.resolve(__dirname, "src/utils"),
       }
     },
     devServer: {
