@@ -1,16 +1,13 @@
 import React, { useMemo, useEffect, useState, useRef } from "react";
 /*
-  1.  make this be pure tailwindcss
-  2.  make this be broken into components
-  3.  add powerups:
+  1.  add powerups:
     a.  stars will remove a number of coffins
     b.  fireball will remove a bigfoot
-  4.  at certain levels, change the speed from 250ms, to 200ms, then 150ms, etc.
-  5.  when starting a level, no movement of anything until the user presses one 
-      of the arrow keys first
-  6.  make the score go 7 digits instead of 6
+  2.  at certain levels, change the speed from 250ms, to 200ms, then 150ms, etc.
+  3.  add sound effects for actions
 */
 import { Mushroom, Coffin, Spy, DeadHead, Sasquatch } from "@components/index";
+import { MdBlock } from "react-icons/md";
 
 type SquareTableProps = {
   rows: number;
@@ -84,6 +81,8 @@ const getTableState = (rows: number, cols: number) => {
 };
 
 const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
+  // Track if movement is allowed (after first arrow key press)
+  const [movementAllowed, setMovementAllowed] = useState<boolean>(false);
   // Table state for reset
   const [tableSeed, setTableSeed] = useState<number>(0);
   // Level state
@@ -209,6 +208,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
     setHighScore(0);
     setDeadHeadCell(null);
     setLevel(1);
+    setMovementAllowed(false);
     // These will be reset by useMemo and useRef on next render
   };
 
@@ -224,6 +224,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
         y: Math.floor(idx / cols),
       }))
     );
+    setMovementAllowed(false);
   }, [
     coffinCellsInit,
     mushroomCellsInit,
@@ -236,7 +237,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
 
   // Sasquatch movement effect
   useEffect(() => {
-    if (deadHeadCell !== null) return;
+    if (deadHeadCell !== null || !movementAllowed) return;
     const interval = setInterval(() => {
       setSasquatchPositions((prevPositions) => {
         let collisionIndex: number | null = null;
@@ -292,7 +293,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
       });
     }, 350);
     return () => clearInterval(interval);
-  }, [cols, rows, deadHeadCell]);
+  }, [cols, rows, deadHeadCell, movementAllowed]);
 
   // Arrow key event listener logic
   useEffect(() => {
@@ -309,16 +310,24 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
       }
 
       let { x, y } = spyPos;
+      let arrowPressed = false;
       if (e.key === "ArrowUp") {
         y = Math.max(0, y - 1);
+        arrowPressed = true;
       } else if (e.key === "ArrowDown") {
         y = Math.min(rows - 1, y + 1);
+        arrowPressed = true;
       } else if (e.key === "ArrowLeft") {
         x = Math.max(0, x - 1);
+        arrowPressed = true;
       } else if (e.key === "ArrowRight") {
         x = Math.min(cols - 1, x + 1);
+        arrowPressed = true;
       } else {
         return;
+      }
+      if (arrowPressed && !movementAllowed) {
+        setMovementAllowed(true);
       }
       const newIndex = getIndex(x, y);
 
@@ -362,7 +371,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [spyPos, rows, cols, deadHeadCell]);
+  }, [spyPos, rows, cols, deadHeadCell, movementAllowed]);
 
   return (
     <div className="flex w-screen h-screen overflow-hidden">
@@ -379,13 +388,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
       </div>
       {/* Table centered in middle gutter */}
       <div className="flex justify-center items-center w-2/4 h-full">
-        <table
-          className={tableClass}
-          style={{
-            width: size * cols,
-            height: size * rows,
-          }}
-        >
+        <table className={`${tableClass} w-full h-full`}>
           <tbody>
             {Array.from({ length: rows }).map((_, r) => (
               <tr key={r}>
@@ -397,11 +400,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
                     (p) => p.x === c && p.y === r
                   );
                   return (
-                    <td
-                      className={getCellClass(r, c)}
-                      style={{ width: size, height: size }}
-                      key={c}
-                    >
+                    <td className={`${getCellClass(r, c)} w-10 h-10`} key={c}>
                       {deadHeadCell === cellIndex ? (
                         <DeadHead className="mx-auto text-xl text-red-600" />
                       ) : coffinCells.current.has(cellIndex) ? (
@@ -422,7 +421,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
         </table>
       </div>
       {/* Right gutter: Game Over message if deadHeadCell is set */}
-      <div className="w-1/4 h-full flex flex-col justify-center items-center">
+      <div className="w-1/4 h-full flex flex-col justify-center items-center relative">
         {deadHeadCell !== null && (
           <>
             <div className="text-5xl font-bold text-center text-red-700">
@@ -433,6 +432,33 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
             </div>
           </>
         )}
+        {/* Key at bottom right gutter - single row, spaced evenly */}
+        <div className="absolute bottom-8 right-0 w-full flex flex-row justify-evenly items-end px-8 pointer-events-none select-none">
+          {/* Coffin Key with MdBlock overlay */}
+          <div className="flex flex-col items-center relative">
+            <span className="text-xs font-semibold mb-1">Coffin</span>
+            <div className="relative flex items-center justify-center">
+              <Coffin className="text-4xl text-white" />
+              <MdBlock className="absolute inset-0 m-auto text-4xl text-red-600 z-10" />
+            </div>
+          </div>
+          {/* Sasquatch Key with MdBlock overlay */}
+          <div className="flex flex-col items-center relative">
+            <span className="text-xs font-semibold mb-1">Sasquatch</span>
+            <div className="relative flex items-center justify-center">
+              <Sasquatch className="text-4xl text-yellow-400" />
+              <MdBlock className="absolute inset-0 m-auto text-4xl text-red-600 z-10" />
+            </div>
+          </div>
+          {/* Mushroom Key */}
+          <div className="flex flex-col items-center">
+            <span className="text-xs font-semibold mb-1">Mushroom</span>
+            <div className="flex items-center gap-2">
+              <Mushroom className="text-4xl text-green-600" />
+              <span className="text-xs font-bold text-green-700">100pts</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
