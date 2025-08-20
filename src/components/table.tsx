@@ -1,4 +1,15 @@
 import React, { useMemo, useEffect, useState, useRef } from "react";
+/*
+  1.  make this be pure tailwindcss
+  2.  make this be broken into components
+  3.  add powerups:
+    a.  stars will remove a number of coffins
+    b.  fireball will remove a bigfoot
+  4.  at certain levels, change the speed from 250ms, to 200ms, then 150ms, etc.
+  5.  when starting a level, no movement of anything until the user presses one 
+      of the arrow keys first
+  6.  make the score go 7 digits instead of 6
+*/
 import {
   GiMushroomGills,
   GiCoffin,
