@@ -195,23 +195,22 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
   // Mutable refs for current icon positions
   const coffinCells = useRef<Set<number>>(new Set(coffinCellsInit));
   const mushroomCells = useRef<Set<number>>(new Set(mushroomCellsInit));
-  const sasquatchCells = useRef<Set<number>>(new Set(sasquatchCellsInit));
 
   // Reset table state
   const resetTable = () => {
-    setTableSeed((seed) => seed + 1);
-    setHighScore(0);
+    // Reset all game state immediately
     setDeadHeadCell(null);
+    setHighScore(0);
     setLevel(1);
     setMovementAllowed(false);
-    // These will be reset by useMemo and useRef on next render
+    // Trigger table regeneration last
+    setTableSeed((seed) => seed + 1);
   };
 
   // Reset icons and spy position when tableSeed changes
   useEffect(() => {
     coffinCells.current = new Set(coffinCellsInit);
     mushroomCells.current = new Set(mushroomCellsInit);
-    sasquatchCells.current = new Set(sasquatchCellsInit);
     setSpyPos(spyStartCell !== null ? getXY(spyStartCell) : { x: 0, y: 0 });
     setSasquatchPositions(
       Array.from(sasquatchCellsInit).map((idx) => ({
@@ -235,6 +234,16 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
     if (deadHeadCell !== null || !movementAllowed) return;
     const interval = setInterval(() => {
       setSasquatchPositions((prevPositions) => {
+        // Check for immediate collision with current spy position
+        const currentSpyPos = spyPosRef.current;
+        const immediateCollision = prevPositions.find(
+          (pos) => pos.x === currentSpyPos.x && pos.y === currentSpyPos.y
+        );
+        if (immediateCollision) {
+          setDeadHeadCell(getIndex(currentSpyPos.x, currentSpyPos.y));
+          return prevPositions; // Don't move, game is over
+        }
+
         let collisionIndex: number | null = null;
         let collisionIdxInArray: number | null = null;
         const newPositions = prevPositions.map((pos, idx) => {
@@ -242,7 +251,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
           const chaseSpy = Math.random() < 0.5;
           let target;
           if (chaseSpy || mushroomCells.current.size === 0) {
-            target = spyPosRef.current;
+            target = currentSpyPos;
           } else {
             // Find nearest mushroom
             let minDist = Infinity;
@@ -256,7 +265,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
                 nearest = { x: mx, y: my };
               }
             }
-            target = nearest || spyPosRef.current;
+            target = nearest || currentSpyPos;
           }
           const next = moveToward(pos, target);
           const nextIdx = getIndex(next.x, next.y);
@@ -266,19 +275,21 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
           }
           // If moving onto GiSpy, trigger game over and mark this Sasquatch for removal
           if (
-            next.x === spyPosRef.current.x &&
-            next.y === spyPosRef.current.y &&
+            next.x === currentSpyPos.x &&
+            next.y === currentSpyPos.y &&
             collisionIndex === null
           ) {
-            collisionIndex = getIndex(spyPosRef.current.x, spyPosRef.current.y);
+            collisionIndex = getIndex(currentSpyPos.x, currentSpyPos.y);
             collisionIdxInArray = idx;
           }
           return next;
         });
+
         // If all mushrooms are gone, start next level
         if (mushroomCells.current.size === 0) {
           setTimeout(restartTableKeepScore, 250);
         }
+
         if (collisionIndex !== null && collisionIdxInArray !== null) {
           setDeadHeadCell(collisionIndex);
           // Remove the Sasquatch that collided
@@ -337,15 +348,14 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
         }
       }
 
-      // If GiSpy enters a sasquatch cell and the icon is rendered
-      if (sasquatchCells.current.has(newIndex)) {
-        // Only trigger game over if the cell is visually a Sasquatch
-        if (sasquatchCells.current.has(newIndex)) {
-          sasquatchCells.current.delete(newIndex);
-          setDeadHeadCell(newIndex);
-          setSpyPos({ x, y });
-          return;
-        }
+      // Check if Spy moves into any Sasquatch position
+      const sasquatchAtNewPos = sasquatchPositions.find(
+        (p) => p.x === x && p.y === y
+      );
+      if (sasquatchAtNewPos) {
+        setDeadHeadCell(newIndex);
+        setSpyPos({ x, y });
+        return;
       }
 
       // If GiSpy enters a mushroom cell
@@ -366,7 +376,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [spyPos, rows, cols, deadHeadCell, movementAllowed]);
+  }, [spyPos, rows, cols, deadHeadCell, movementAllowed, sasquatchPositions]);
 
   return (
     <div className="flex w-screen h-screen overflow-hidden">
