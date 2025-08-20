@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack serve --config webpack.config.js --mode development --port 3000 --open",
     "debug": "webpack serve --config webpack.config.js --mode development --port 3000",
-    "build": "npm version minor && webpack --mode production",
+    "build": "webpack --mode production",
     "build:dev": "prettier --write src/**/*.{ts,tsx,css,html} && webpack --mode development",
     "prettier": "prettier --write src/**/*.{ts,tsx,css,html}",
     "browsersList": "node ./buildBrowsersListFormatted.js",
