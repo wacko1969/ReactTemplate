@@ -91,7 +91,6 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
   // Debounce ref for arrow key movement
   const lastMoveRef = useRef<number>(0);
   // Table and cell classes
-  // ...existing code...
   // Only perimeter cells get borders
   const getCellClass = (r: number, c: number) => {
     let borders = "";
@@ -101,10 +100,6 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
     if (c === cols - 1) borders += " border-r-2 border-gray-800";
     return `box-border text-center align-middle${borders}`;
   };
-  // Calculate cell size based on viewport and table dimensions
-  const size = Math.floor(
-    Math.min(window.innerWidth / cols, window.innerHeight / rows)
-  );
 
   // Helper to restart table but keep score
   const restartTableKeepScore = () => {
@@ -376,7 +371,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
   return (
     <div className="flex w-screen h-screen overflow-hidden">
       {/* Left gutter: vertically and horizontally centered content */}
-      <div className="flex flex-col justify-center items-center w-1/4 h-full relative">
+      <div className="flex flex-col justify-center items-center flex-shrink-0 w-80 h-full relative">
         <div className="text-5xl font-bold text-center">Score</div>
         <div className="text-5xl font-mono text-center mt-2">
           {highScore.toString().padStart(6, "0")}
@@ -387,41 +382,43 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
         </div>
       </div>
       {/* Table centered in middle gutter */}
-      <div className="flex justify-center items-center w-2/4 h-full">
-        <table className={`${tableClass} w-full h-full`}>
-          <tbody>
-            {Array.from({ length: rows }).map((_, r) => (
-              <tr key={r}>
-                {Array.from({ length: cols }).map((_, c) => {
-                  const cellIndex = r * cols + c;
-                  const isSpy = spyPos.x === c && spyPos.y === r;
-                  // Show Sasquatch if any is at this cell
-                  const isSasquatch = sasquatchPositions.some(
-                    (p) => p.x === c && p.y === r
-                  );
-                  return (
-                    <td className={`${getCellClass(r, c)} w-10 h-10`} key={c}>
-                      {deadHeadCell === cellIndex ? (
-                        <DeadHead className="mx-auto text-xl text-red-600" />
-                      ) : coffinCells.current.has(cellIndex) ? (
-                        <Coffin className="mx-auto text-xl text-white" />
-                      ) : mushroomCells.current.has(cellIndex) ? (
-                        <Mushroom className="mx-auto text-xl text-green-600" />
-                      ) : isSasquatch ? (
-                        <Sasquatch className="mx-auto text-xl text-yellow-400" />
-                      ) : isSpy ? (
-                        <Spy className="mx-auto text-xl text-blue-600" />
-                      ) : null}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="flex justify-center items-center flex-1 h-full min-w-0">
+        <div className="flex justify-center items-center">
+          <table className={`${tableClass} border-collapse`}>
+            <tbody>
+              {Array.from({ length: rows }).map((_, r) => (
+                <tr key={r}>
+                  {Array.from({ length: cols }).map((_, c) => {
+                    const cellIndex = r * cols + c;
+                    const isSpy = spyPos.x === c && spyPos.y === r;
+                    // Show Sasquatch if any is at this cell
+                    const isSasquatch = sasquatchPositions.some(
+                      (p) => p.x === c && p.y === r
+                    );
+                    return (
+                      <td className={`${getCellClass(r, c)}`} key={c}>
+                        {deadHeadCell === cellIndex ? (
+                          <DeadHead className="mx-auto text-xl text-red-600" />
+                        ) : coffinCells.current.has(cellIndex) ? (
+                          <Coffin className="mx-auto text-xl text-white" />
+                        ) : mushroomCells.current.has(cellIndex) ? (
+                          <Mushroom className="mx-auto text-xl text-green-600" />
+                        ) : isSasquatch ? (
+                          <Sasquatch className="mx-auto text-xl text-yellow-400" />
+                        ) : isSpy ? (
+                          <Spy className="mx-auto text-xl text-blue-600" />
+                        ) : null}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       {/* Right gutter: Game Over message if deadHeadCell is set */}
-      <div className="w-1/4 h-full flex flex-col justify-center items-center relative">
+      <div className="flex-shrink-0 w-80 h-full flex flex-col justify-center items-center relative">
         {deadHeadCell !== null && (
           <>
             <div className="text-5xl font-bold text-center text-red-700">
