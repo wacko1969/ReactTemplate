@@ -1,2 +1,12 @@
 export { default as Spinner } from "./spinner";
 export { default as SquareTable } from "./table";
+export { default as Mushroom } from "./Mushroom";
+export { default as MushroomProps } from "./Mushroom";
+export { default as Coffin } from "./Coffin";
+export { default as CoffinProps } from "./Coffin";
+export { default as Spy } from "./Spy";
+export { default as SpyProps } from "./Spy";
+export { default as DeadHead } from "./DeadHead";
+export { default as DeadHeadProps } from "./DeadHead";
+export { default as Sasquatch } from "./Sasquatch";
+export { default as SasquatchProps } from "./Sasquatch";

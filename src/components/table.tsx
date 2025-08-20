@@ -10,13 +10,7 @@ import React, { useMemo, useEffect, useState, useRef } from "react";
       of the arrow keys first
   6.  make the score go 7 digits instead of 6
 */
-import {
-  GiMushroomGills,
-  GiCoffin,
-  GiSpy,
-  GiDeadHead,
-  GiSasquatch,
-} from "react-icons/gi";
+import { Mushroom, Coffin, Spy, DeadHead, Sasquatch } from "@components/index";
 
 type SquareTableProps = {
   rows: number;
@@ -409,15 +403,15 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
                       key={c}
                     >
                       {deadHeadCell === cellIndex ? (
-                        <GiDeadHead className="mx-auto text-xl text-red-600" />
+                        <DeadHead className="mx-auto text-xl text-red-600" />
                       ) : coffinCells.current.has(cellIndex) ? (
-                        <GiCoffin className="mx-auto text-xl text-white" />
+                        <Coffin className="mx-auto text-xl text-white" />
                       ) : mushroomCells.current.has(cellIndex) ? (
-                        <GiMushroomGills className="mx-auto text-xl text-green-600" />
+                        <Mushroom className="mx-auto text-xl text-green-600" />
                       ) : isSasquatch ? (
-                        <GiSasquatch className="mx-auto text-xl text-yellow-400" />
+                        <Sasquatch className="mx-auto text-xl text-yellow-400" />
                       ) : isSpy ? (
-                        <GiSpy className="mx-auto text-xl text-blue-600" />
+                        <Spy className="mx-auto text-xl text-blue-600" />
                       ) : null}
                     </td>
                   );
