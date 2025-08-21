@@ -10,3 +10,5 @@ export { default as DeadHead } from "./DeadHead";
 export { default as DeadHeadProps } from "./DeadHead";
 export { default as Sasquatch } from "./Sasquatch";
 export { default as SasquatchProps } from "./Sasquatch";
+export { default as SnowFlake } from "./SnowFlake";
+export { default as SnowFlakeProps } from "./SnowFlake";

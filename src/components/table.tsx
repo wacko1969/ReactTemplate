@@ -3,10 +3,18 @@ import React, { useMemo, useEffect, useState, useRef } from "react";
   1.  add powerups:
     a.  stars will remove a number of coffins
     b.  fireball will remove a bigfoot
+    c.  ice will freeze all bigfoot for 5 seconds
   2.  at certain levels, change the speed from 250ms, to 200ms, then 150ms, etc.
   3.  add sound effects for actions
 */
-import { Mushroom, Coffin, Spy, DeadHead, Sasquatch } from "@components/index";
+import {
+  Mushroom,
+  Coffin,
+  Spy,
+  DeadHead,
+  Sasquatch,
+  SnowFlake,
+} from "@components/index";
 import { MdBlock } from "react-icons/md";
 
 type SquareTableProps = {
@@ -103,13 +111,29 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
 
   // Helper to restart table but keep score
   const restartTableKeepScore = () => {
+    // Clear snowflake timers
+    if (snowflakeTimerRef.current) {
+      clearTimeout(snowflakeTimerRef.current);
+      snowflakeTimerRef.current = null;
+    }
+    if (freezeTimerRef.current) {
+      clearTimeout(freezeTimerRef.current);
+      freezeTimerRef.current = null;
+    }
+    if (spawnTimerRef.current) {
+      clearTimeout(spawnTimerRef.current);
+      spawnTimerRef.current = null;
+    }
+    setSnowflakeCell(null);
+    setSasquatchFrozen(false);
+
     setTableSeed((seed) => seed + 1);
     setDeadHeadCell(null);
     setLevel((prev) => prev + 1);
     // Do NOT reset highScore
   };
 
-  // Helper to get valid moves (no coffin, within bounds)
+  // Helper to get valid moves (no coffin, within bounds, avoid snowflake)
   const getValidMoves = (x: number, y: number) => {
     const moves = [
       { x: x - 1, y },
@@ -123,8 +147,62 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
         x < cols &&
         y >= 0 &&
         y < rows &&
-        !coffinCells.current.has(getIndex(x, y))
+        !coffinCells.current.has(getIndex(x, y)) &&
+        (snowflakeCell === null || getIndex(x, y) !== snowflakeCell)
     );
+  };
+
+  // Helper to find all open cells (no coffins, mushrooms, spy, sasquatch, or snowflake)
+  const getOpenCells = () => {
+    const openCells: number[] = [];
+    const totalCells = rows * cols;
+    const spyIndex = getIndex(spyPos.x, spyPos.y);
+    const sasquatchIndices = new Set(
+      sasquatchPositions.map((pos) => getIndex(pos.x, pos.y))
+    );
+
+    for (let i = 0; i < totalCells; i++) {
+      if (
+        !coffinCells.current.has(i) &&
+        !mushroomCells.current.has(i) &&
+        i !== spyIndex &&
+        !sasquatchIndices.has(i) &&
+        i !== snowflakeCell
+      ) {
+        openCells.push(i);
+      }
+    }
+    return openCells;
+  };
+
+  // Helper to spawn a snowflake at a random open location
+  const spawnSnowflake = () => {
+    if (snowflakeCell !== null || deadHeadCell !== null) return;
+
+    const openCells = getOpenCells();
+    if (openCells.length === 0) return;
+
+    const randomCell = openCells[Math.floor(Math.random() * openCells.length)];
+    setSnowflakeCell(randomCell);
+
+    // Set timer to remove snowflake after 10 seconds
+    snowflakeTimerRef.current = setTimeout(() => {
+      setSnowflakeCell(null);
+      snowflakeTimerRef.current = null;
+    }, 10000);
+  };
+
+  // Helper to schedule next snowflake spawn
+  const scheduleNextSnowflake = () => {
+    if (spawnTimerRef.current) {
+      clearTimeout(spawnTimerRef.current);
+    }
+    // Random spawn time between 5-15 seconds
+    const spawnDelay = 5000 + Math.random() * 10000;
+    spawnTimerRef.current = setTimeout(() => {
+      spawnSnowflake();
+      scheduleNextSnowflake(); // Schedule the next one
+    }, spawnDelay);
   };
 
   const tableClass = "game-table";
@@ -192,17 +270,40 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
   // State for dead head cell (if GiSpy hits a coffin)
   const [deadHeadCell, setDeadHeadCell] = useState<number | null>(null);
 
+  // Snowflake state
+  const [snowflakeCell, setSnowflakeCell] = useState<number | null>(null);
+  const [sasquatchFrozen, setSasquatchFrozen] = useState<boolean>(false);
+  const snowflakeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const freezeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const spawnTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   // Mutable refs for current icon positions
   const coffinCells = useRef<Set<number>>(new Set(coffinCellsInit));
   const mushroomCells = useRef<Set<number>>(new Set(mushroomCellsInit));
 
   // Reset table state
   const resetTable = () => {
+    // Clear snowflake timers
+    if (snowflakeTimerRef.current) {
+      clearTimeout(snowflakeTimerRef.current);
+      snowflakeTimerRef.current = null;
+    }
+    if (freezeTimerRef.current) {
+      clearTimeout(freezeTimerRef.current);
+      freezeTimerRef.current = null;
+    }
+    if (spawnTimerRef.current) {
+      clearTimeout(spawnTimerRef.current);
+      spawnTimerRef.current = null;
+    }
+
     // Reset all game state immediately
     setDeadHeadCell(null);
     setHighScore(0);
     setLevel(1);
     setMovementAllowed(false);
+    setSnowflakeCell(null);
+    setSasquatchFrozen(false);
     // Trigger table regeneration last
     setTableSeed((seed) => seed + 1);
   };
@@ -219,6 +320,8 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
       }))
     );
     setMovementAllowed(false);
+    setSnowflakeCell(null);
+    setSasquatchFrozen(false);
   }, [
     coffinCellsInit,
     mushroomCellsInit,
@@ -231,7 +334,7 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
 
   // Sasquatch movement effect
   useEffect(() => {
-    if (deadHeadCell !== null || !movementAllowed) return;
+    if (deadHeadCell !== null || !movementAllowed || sasquatchFrozen) return;
     const interval = setInterval(() => {
       setSasquatchPositions((prevPositions) => {
         // Check for immediate collision with current spy position
@@ -285,11 +388,6 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
           return next;
         });
 
-        // If all mushrooms are gone, start next level
-        if (mushroomCells.current.size === 0) {
-          setTimeout(restartTableKeepScore, 250);
-        }
-
         if (collisionIndex !== null && collisionIdxInArray !== null) {
           setDeadHeadCell(collisionIndex);
           // Remove the Sasquatch that collided
@@ -299,7 +397,20 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
       });
     }, 350);
     return () => clearInterval(interval);
-  }, [cols, rows, deadHeadCell, movementAllowed]);
+  }, [cols, rows, deadHeadCell, movementAllowed, sasquatchFrozen]);
+
+  // Snowflake spawning effect
+  useEffect(() => {
+    if (movementAllowed && deadHeadCell === null) {
+      scheduleNextSnowflake();
+    }
+    return () => {
+      if (spawnTimerRef.current) {
+        clearTimeout(spawnTimerRef.current);
+        spawnTimerRef.current = null;
+      }
+    };
+  }, [movementAllowed, deadHeadCell, snowflakeCell]);
 
   // Arrow key event listener logic
   useEffect(() => {
@@ -354,6 +465,29 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
       );
       if (sasquatchAtNewPos) {
         setDeadHeadCell(newIndex);
+        setSpyPos({ x, y });
+        return;
+      }
+
+      // Check if Spy moves into snowflake
+      if (snowflakeCell === newIndex) {
+        // Remove snowflake
+        setSnowflakeCell(null);
+        if (snowflakeTimerRef.current) {
+          clearTimeout(snowflakeTimerRef.current);
+          snowflakeTimerRef.current = null;
+        }
+
+        // Add 250 points
+        setHighScore((score: number) => score + 250);
+
+        // Freeze all sasquatch for 5 seconds
+        setSasquatchFrozen(true);
+        freezeTimerRef.current = setTimeout(() => {
+          setSasquatchFrozen(false);
+          freezeTimerRef.current = null;
+        }, 5000);
+
         setSpyPos({ x, y });
         return;
       }
@@ -413,6 +547,8 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
                           <Coffin className="mx-auto text-xl text-white" />
                         ) : mushroomCells.current.has(cellIndex) ? (
                           <Mushroom className="mx-auto text-xl text-green-600" />
+                        ) : snowflakeCell === cellIndex ? (
+                          <SnowFlake className="mx-auto text-xl text-cyan-400" />
                         ) : isSasquatch ? (
                           <Sasquatch className="mx-auto text-xl text-yellow-400" />
                         ) : isSpy ? (
@@ -463,6 +599,14 @@ const SquareTable: React.FC<SquareTableProps> = ({ rows, cols }) => {
             <div className="flex items-center gap-2">
               <Mushroom className="text-4xl text-green-600" />
               <span className="text-xs font-bold text-green-700">100pts</span>
+            </div>
+          </div>
+          {/* Snowflake Key */}
+          <div className="flex flex-col items-center">
+            <span className="text-xs font-semibold mb-1">Snowflake</span>
+            <div className="flex items-center gap-2">
+              <SnowFlake className="text-4xl text-cyan-400" />
+              <span className="text-xs font-bold text-cyan-600">250pts</span>
             </div>
           </div>
         </div>
