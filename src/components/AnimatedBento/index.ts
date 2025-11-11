@@ -1,5 +1,4 @@
 export {
-  default as AnimatedBento,
   AnimatedBentoBlock,
   AnimatedBentoContent,
   default,
